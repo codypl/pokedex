@@ -1,9 +1,5 @@
 ---
-export interface Props {
-	title: string;
-}
-
-const { title } = Astro.props as Props;
+import Meta from '../components/meta.astro'
 ---
 
 <!DOCTYPE html>
@@ -11,8 +7,8 @@ const { title } = Astro.props as Props;
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width">
-  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-	<title>{title}</title>
+  <meta name="theme-color" content="#3367D6">
+  <Meta title='Pokédex' description="Pokédex for the web"></Meta>
 </head>
 <body>
 	<slot />

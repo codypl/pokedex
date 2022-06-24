@@ -22,7 +22,7 @@ function PokemonCard(props) {
         onMouseLeave={() => setOver(false)}
         onClick={() => setShowModal(true)}
       >
-        <img className={(over ? `w-24 -top-12` : `w-20 -top-10`) + ` absolute h-auto transition-all rendering-pixelated `}
+        <img alt={pokemon.species.name} className={(over ? `w-24 -top-12` : `w-20 -top-10`) + ` absolute h-auto transition-all rendering-pixelated `}
           src={pokemon.sprites.front_default}
         />
         <span className="mt-3 font-bold capitalize">{pokemon.species.name}</span>
@@ -46,7 +46,7 @@ function PokemonCard(props) {
                   <p className="opacity-60 text-lg mb-0">#{pokemon.id}</p>
                   <p className='text-3xl font-bold capitalize'>{pokemon.species.name}</p>
                 </div>
-                <img className='w-3/5 mx-auto h-auto rendering-pixelated' src={sprite_animated} />
+                <img alt={pokemon.species.name} className='w-3/5 mx-auto h-auto rendering-pixelated' src={sprite_animated} />
                 <ListTypes />
                 <ListStats />
               </div>
@@ -64,7 +64,7 @@ function PokemonCard(props) {
       <div className="w-fit mx-auto mt-4 flex justify-between space-x-2">
         {pokemon.types.map((type) => {
           return (
-            <div style={{ backgroundColor: `var(--color-${type.type.name})` }} className={`px-2 py-1 rounded-md text-xs font-bold uppercase`} key={pokemon.name + type.type.name}><span>{type.type.name}</span></div>
+            <div style={{ backgroundColor: `var(--color-${type.type.name})` }} className={`text-white px-2 py-1 rounded-md text-xs font-bold uppercase`} key={pokemon.name + type.type.name}><span>{type.type.name}</span></div>
           )
         })}
       </div>
