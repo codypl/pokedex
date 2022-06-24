@@ -1,0 +1,14 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AllPokemons from '../components/AllPokemons.jsx';
+---
+<Layout title="Welcome to Astro.">
+	<main class="my-10">
+    <h1 class="text-3xl text-center">Pokédex</h1>
+    <AllPokemons client:load/>
+	</main>
+</Layout>
+
+<style>
+
+</style>
