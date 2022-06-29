@@ -40,7 +40,7 @@ function PokemonCard(props) {
       evolution_profil++
 
       if (filterIdFromSpeciesURL(evoData.species.url) <= MAX_POKEMON_TO_SHOW && evoChain.find(evolution => evolution.id === filterIdFromSpeciesURL(evoData.species.url)) === undefined) {
-        
+
         evoChain.push({
           "id": filterIdFromSpeciesURL(evoData.species.url),
           "species_name": evoData.species.name,
@@ -65,10 +65,6 @@ function PokemonCard(props) {
       evoData = evoData.evolves_to[0];
 
     } while (evoData != undefined && evoData.hasOwnProperty('evolves_to'));
-
-    // evoChain.sort(function (a, b) {
-    //   return a.id - b.id;
-    // });
 
     setPokemonDetails(previousState => {
       return { ...previousState, evolutions: evoChain }
@@ -101,19 +97,16 @@ function PokemonCard(props) {
         <img alt={pokemon.species.name} className={(over ? `w-24 -top-12` : `w-20 -top-10`) + ` absolute h-auto transition-all rendering-pixelated `}
           src={pokemon.sprites.front_default}
         />
-        <img alt={pokemon.species.name} className='hidden w-2/5 h-auto rendering-pixelated'
-          src={'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/' + pokemon.id + '.gif'}
-        />
-        <PokemonId />
-        <PokemonName />
+        <p class="info">N°{pokemon.id}</p>
+        <p className="text-base title">{pokemon.species.name}</p>
         <ListTypes />
       </div>
 
       {showModal ? (
         <>
 
-          <div className="w-5/6 h-[90%] md:w-[30rem] mx-auto fixed z-20 inset-0 my-auto">
-            <div className='flex flex-col items-center h-full p-6 overflow-y-scroll text-center bg-white rounded-lg shadow-lg'>
+          <div className="w-5/6 h-fit max-h-[94vh] md:w-[30rem] overflow-y-auto mx-auto fixed  rounded-lg z-20 inset-0 my-auto">
+            <div className='flex flex-col items-center p-6 text-center bg-white shadow-lg'>
               <button className="absolute top-0 right-0 w-10 h-10 m-5 rounded-full shadow-lg bg-stone-100"
                 onClick={() => setShowModal(false)}
               >
@@ -128,56 +121,24 @@ function PokemonCard(props) {
                     src={'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/' + pokemon.id + '.gif'}
                   />
 
-                  <PokemonId />
-                  <span className='text-2xl'>
-                    <PokemonName />
-                  </span>
+                  <p class="info">N°{pokemon.id}</p>
+                  <p className="title">{pokemon.species.name}</p>
 
                   <ListTypes />
-                  <span className='mt-5 mb-1 font-bold uppercase'>
-                    Pokédex entry
-                  </span>
-                  {pokemonDetails.flavor_text}
 
-                  <div className='flex justify-around w-full mt-5 space-x-2'>
-                    <div className='flex flex-col w-1/2'>
-                      <span className='mb-1 font-bold uppercase'>
-                        Height
-                      </span>
-                      <div className='w-full py-1 bg-gray-100 rounded-full'>
-                        {pokemon.height / 10}m
-                      </div>
-                    </div>
-                    <div className='flex flex-col w-1/2'>
-                      <span className='mb-1 font-bold uppercase'>
-                        Weight
-                      </span>
-                      <div className='w-full py-1 bg-gray-100 rounded-full'>
-                        {pokemon.weight / 10}Kg
-                      </div>
-                    </div>
+                  <p className='subheading'>Pokédex entry</p>
+                  <p>{pokemonDetails.flavor_text}</p>
+
+                  <div className='flex justify-around w-full space-x-2'>
+                    <Information name={'Height'} value={pokemon.height / 10 + `m`} />
+                    <Information name={'Weight'} value={pokemon.weight / 10 + `Kg`} />
                   </div>
 
-                  <span className='mt-5 mb-1 font-bold uppercase'>Stats</span>
+                  <p className='subheading'>Stats</p>
                   <ListStats />
 
-                  <span className='mt-5 mb-1 font-bold uppercase'>Evolutions</span>
-                  {pokemonDetails.evolutions.length > 1 ? (
-                    <>
-                      <div className='flex flex-wrap justify-around w-full'>
-                        {pokemonDetails.evolutions.map(function (evolution) {
-                          return (
-                            <>
-                              <img alt={evolution.species_name} className='rendering-pixelated'
-                                src={evolution.image}
-                              />
-                            </>
-                          )
-                        })
-                        }
-                      </div>
-                    </>
-                  ) : (<p>∅</p>)}
+                  <p className='subheading'>Evolutions</p>
+                  <ListEvolutions />
 
                 </>
               )
@@ -192,15 +153,16 @@ function PokemonCard(props) {
 
   )
 
-  function PokemonName() {
+  function Information(props) {
     return (
-      <span className="font-bold capitalize">{pokemon.species.name}</span>
-    )
-  }
-
-  function PokemonId() {
-    return (
-      <span className="mt-5 text-xs font-bold text-gray-500">N°{pokemon.id}</span>
+      <div className='flex flex-col grow'>
+        <p className='mb-1 subheading'>
+          {props.name}
+        </p>
+        <div className='w-full py-1 bg-gray-100 rounded-full'>
+          {props.value}
+        </div>
+      </div>
     )
   }
 
@@ -209,41 +171,72 @@ function PokemonCard(props) {
       <div className="flex justify-between mx-auto mt-2 space-x-2 w-fit">
         {pokemon.types.map((type) => {
           return (
-            <div style={{ backgroundColor: `var(--color-${type.type.name})` }} className={`text-white px-2 py-1 rounded-md text-xs font-bold uppercase`} key={pokemon.name + type.type.name}><span>{type.type.name}</span></div>
+            <TypeBadge type={type} />
           )
         })}
       </div>
     )
   }
 
+  function TypeBadge(props) {
+    return (
+      <div style={{ backgroundColor: `var(--color-${props.type.type.name})` }} className={`text-white px-2 py-1 rounded-md text-xs font-bold uppercase`} key={pokemon.name + props.type.type.name}><p>{props.type.type.name}</p></div>
+    )
+  }
+
   function ListStats() {
     let total = 0
     return (
-
       <div className="flex flex-wrap justify-around w-full space-x-2">
         {pokemon.stats.map((stat) => {
           total += stat.base_stat
           return (
-            <div key={pokemon.name + stat.stat.name} className='flex flex-col text-center bg-gray-100 rounded-full w-fit h-fit'>
-              <div style={{ backgroundColor: `var(--color-${stat.stat.name})` }} className="text-sm font-bold rounded-full m-0.5 p-1 overflow-hidden text-opacity-75 w-9 h-9 flex justify-center items-center">
-                {getShorterNameStat(stat.stat.name)}
-              </div>
-              <div className="rounded-b-full mb-1.5 mx-1">
-                {stat.base_stat}
-              </div>
+            <div key={pokemon.name + stat.stat.name}>
+              <Stat name={stat.stat.name} value={stat.base_stat} />
             </div>
           )
         })}
-        <div className='flex flex-col text-center bg-gray-100 rounded-full w-fit h-fit'>
-          <div style={{ backgroundColor: `var(--color-total)` }} className="text-sm font-bold rounded-full m-0.5 p-1 overflow-hidden text-opacity-75 flex w-9 h-9 justify-center items-center">
-            TOT
-          </div>
-          <div className="rounded-b-full mb-1.5 mx-1">
-            {total}
-          </div>
-        </div>
-
+        <Stat name={"total"} value={total} />
       </div >
+    )
+  }
+
+  function Stat(props) {
+    return (
+      <div className='flex flex-col text-center bg-gray-100 rounded-full w-fit h-fit'>
+        <p style={{ backgroundColor: `var(--color-${props.name})` }} className="text-sm font-bold rounded-full m-0.5 p-1 overflow-hidden text-opacity-75 w-9 h-9 flex justify-center items-center">
+          {getShorterNameStat(props.name)}
+        </p>
+        <p className="rounded-b-full mb-1.5 mx-1">
+          {props.value}
+        </p>
+      </div>
+    )
+  }
+
+  function ListEvolutions() {
+    return (
+      <>
+        {
+          pokemonDetails.evolutions.length > 1 ? (
+            <div className='flex flex-wrap justify-around items-center w-full'>
+              {pokemonDetails.evolutions.map((evolution, index) => {
+              let hasEvolution = pokemonDetails.evolutions[index+1] && pokemonDetails.evolutions[index+1].evolution_profil > evolution.evolution_profil
+              console.log(hasEvolution)
+                return (
+                  <>
+                    <img alt={evolution.species_name} className='rendering-pixelated'
+                      src={evolution.image}
+                    />
+                    {hasEvolution ? "→" : null}
+                  </>
+                )
+              })}
+            </div>
+
+          ) : (<p>∅</p>)
+        }
+      </>
     )
   }
 
@@ -261,6 +254,8 @@ function PokemonCard(props) {
         return 'SpD'
       case 'speed':
         return 'SPD'
+      case 'total':
+        return 'TOT'
       default:
         break;
     }
