@@ -14,7 +14,7 @@
     "@astrojs/tailwind": "^0.2.1",
     "astro": "^1.0.0-beta.47",
     "astro-robots-txt": "^0.3.6",
-    "astro-webmanifest": "^0.3.4",
+    "astro-webmanifest": "^1.0.0",
     "preact": "^10.8.1",
     "tailwindcss-image-rendering": "^1.0.2"
   },
